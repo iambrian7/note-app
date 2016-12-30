@@ -1,0 +1,92 @@
+<style>
+    .container {
+        display: flex;
+
+    }
+    .enter-comment {
+        flex-basis: 400px;
+        padding: 0 20px;
+    }
+    .comment-list {
+        flex-basis: 400px;
+        padding: 0 20px;
+    }
+    .latest-comments {
+        flex-basis: 600px;
+
+    }
+    .list {
+        font-size: 1.2em;
+        border-bottom: 1px solid red;
+        padding: 5px 10px;
+    }
+    .sample-comments {
+        border: 1px solid deepskyblue;
+        padding: 10px 20px;
+    }
+    .comment-title {
+        background-color: #0752f1;
+        color: #ffffff;
+        border-radius: 5px;
+        padding: 2px 10px;
+        box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    }
+    .hide {
+        display: none;
+    }
+</style>
+<h1>{{title}}</h1>
+<button onclick="displayCommentEditor()">Add</button>
+<div class="container">
+    <div class="enter-comment hide">
+        <form name="notes" action="/note" method="post">
+            <label for="name"> User: </label><br><input type="text" id="name" name="name" value="brian"><br>
+            <label for="subject"> Subject: </label><br><input type="text" id="subject" name="title"><br>
+            <label>Notes:</label>
+            <textarea rows="20" cols="50" name="comment" placeholder="enter some comments..."></textarea><br>
+            <label for="tags"> Tags: <input type="text" id="tags" name="tags"></label>
+            <button>Submit</button>
+            <button type="button" onclick="cancelNote()">Cancel</button>
+        </form>
+    </div>
+    <div class="latest-comments">
+        <h2>Latest Comments</h2>
+        {{#each notes}}
+        <div class="sample-comments">
+           <h3 class="comment-title">{{title}}  ({{displayDate}})</h3>
+                <p>{{comment}}</p>
+
+        </div>
+        {{/each}}
+    </div>
+    <div class="comment-list">
+        <h1>Comments</h1>
+
+        <div id="comments">
+            <!--<ul>-->
+                {{#each notes}}
+                    <div class="list">{{name}} for {{title}} ({{displayDate}})</div>
+                {{/each}}
+            <!--</ul>-->
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function displayCommentEditor(){
+      document.getElementsByClassName('enter-comment')[0].classList.remove('hide');
+        document.getElementsByClassName('latest-comments')[0].classList.add('hide');
+    }
+  //  document.forms["myform"].submit()
+
+    function checkform() {
+        document.getElementsByClassName('enter-comment')[0].classList.add('hide');
+        document.getElementsByClassName('latest-comments')[0].classList.remove('hide');
+        return true;
+    }
+function cancelNote() {
+    checkform();
+}
+    notes.onsubmit = checkform;
+</script>
