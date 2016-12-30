@@ -11,9 +11,12 @@
         flex-basis: 400px;
         padding: 0 20px;
     }
+   h1 {
+       text-align: center;
+   }
+
     .latest-comments {
         flex-basis: 600px;
-
     }
     .list {
         font-size: 1.2em;
@@ -23,6 +26,8 @@
     .sample-comments {
         border: 1px solid deepskyblue;
         padding: 10px 20px;
+        border-radius: 5px;
+        margin-bottom: 10px;
     }
     .comment-title {
         background-color: #0752f1;
@@ -31,12 +36,19 @@
         padding: 2px 10px;
         box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
     }
+    .comment {
+        font-size: 1.2em;
+    }
+    .comment-content {
+        height: 800px;
+        overflow: scroll;
+    }
     .hide {
         display: none;
     }
 </style>
 <h1>{{title}}</h1>
-<button onclick="displayCommentEditor()">Add</button>
+<button onclick="displayCommentEditor()">Add a Note</button>
 <div class="container">
     <div class="enter-comment hide">
         <form name="notes" action="/note" method="post">
@@ -49,19 +61,21 @@
             <button type="button" onclick="cancelNote()">Cancel</button>
         </form>
     </div>
+
     <div class="latest-comments">
-        <h2>Latest Comments</h2>
+        <h1>Latest Notes</h1>
+        <div class="comment-content">
         {{#each notes}}
         <div class="sample-comments">
            <h3 class="comment-title">{{title}}  ({{displayDate}})</h3>
-                <p>{{comment}}</p>
-
+                <p class="comment">{{comment}}</p>
         </div>
         {{/each}}
+        </div>
     </div>
-    <div class="comment-list">
-        <h1>Comments</h1>
 
+    <div class="comment-list">
+        <h1>Notes</h1>
         <div id="comments">
             <!--<ul>-->
                 {{#each notes}}
