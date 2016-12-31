@@ -22,6 +22,12 @@
         font-size: 1.2em;
         border-bottom: 1px solid red;
         padding: 5px 10px;
+        background-color: #f0f4f5;
+        border-radius: 15px;
+        margin: 10px 0;
+        -webkit-box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
+        box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
     }
     .sample-comments {
         border: 1px solid deepskyblue;
@@ -42,6 +48,10 @@
     .comment-content {
         height: 800px;
         overflow: scroll;
+    }
+    .small-date {
+        font-size: .8em;
+        font-style:  italic;
     }
     .hide {
         display: none;
@@ -67,7 +77,7 @@
         <div class="comment-content">
         {{#each notes}}
         <div class="sample-comments">
-           <h3 class="comment-title">{{title}}  ({{displayDate}})</h3>
+           <h3 class="comment-title">{{title}}  <div align='right' class="small-date">{{name}} ({{displayDate}})</div></h3>
                 <p class="comment">{{comment}}</p>
         </div>
         {{/each}}
@@ -79,7 +89,7 @@
         <div id="comments">
             <!--<ul>-->
                 {{#each notes}}
-                    <div class="list">{{name}} for {{title}} ({{displayDate}})</div>
+                    <div class="list">{{title}} <div align='right' class="small-date">{{name}} ({{displayDate}})</div></div>
                 {{/each}}
             <!--</ul>-->
         </div>
