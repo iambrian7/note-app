@@ -1,5 +1,5 @@
 {
-  "name": "testapp1",
+  "name": "note-app",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,10 +10,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.14.0",
-    "fly": "^1.4.1",
     "hbs": "~4.0.1",
     "mongoose": "^4.7.5",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "flightplan": "^0.6.15"
   }
 }

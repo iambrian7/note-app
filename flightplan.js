@@ -3,7 +3,7 @@
  */
 var plan = require('flightplan');
 
-var appName = 'node-app';
+var appName = 'note-app';
 var username = 'deploy';
 var startFile = 'bin/www';
 
