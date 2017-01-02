@@ -1,0 +1,6 @@
+# Connect to SFTP server using a password
+open sftp://deploy:bkcbkc07@104.236.211.128/ -hostkey=""ssh-rsa 28:5d:d6:e2:e7:03:c0:95:96:5d:55:73:6c:fd:3e:84""
+# Upload file
+put c:\test\example.txt deploy@note-app/note-app/example.txt
+# Exit WinSCP
+exit

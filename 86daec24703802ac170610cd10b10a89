@@ -1,0 +1,14 @@
+.gitignore
+app.js
+bin/www
+e69044bbc5ec5d504ac322ec8d8e9a52
+flightplan.js
+models/noteModel.js
+package.json
+public/stylesheets/style.css
+routes/index.js
+routes/note.js
+routes/users.js
+views/error.hbs
+views/index.hbs
+views/layout.hbs
