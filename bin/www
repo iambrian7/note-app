@@ -7,8 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('testapp1:server');
 var http = require('http');
-var ip = require("ip");
-console.dir ("ip.address first up: "+  ip.address() );
+// var ip = require("ip");
+// console.dir ("ip.address first up: "+  ip.address() );
 /**
  * Get port from environment and store in Express.
  */
