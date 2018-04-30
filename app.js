@@ -7,8 +7,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var index = require('./routes/index');
+
 var users = require('./routes/users');
 var note = require('./routes/note');
+var main = require('./routes/main');
 
 var app = express();
 
@@ -24,11 +27,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// mongoose.connect('mongodb://localhost:27017/testapp');
-mongoose.connect('mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks');
+mongoose.connect('mongodb://localhost:27017/testapp');
+//mongoose.connect('mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks');
 //mongoose.connect('mongodb://username:password@host:port/database')
 
-app.use('/', index);
+//app.use('/', index);
+app.use('/main', main);
 app.use('/users', users);
 app.use('/note', note);
 

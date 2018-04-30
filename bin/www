@@ -14,7 +14,7 @@ console.dir ("ip.address first up: "+  ip.address() );
  */
 //var port = 80;
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '7010');
 app.set('port', port);
 
 /**
@@ -89,4 +89,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log("Listening on " + bind)
 }

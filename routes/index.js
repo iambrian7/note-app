@@ -1,31 +1,24 @@
 var express = require('express');
+var path = require('path');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Note = require('../models/noteModel')//(mongoose);
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  Note.find({}).sort({ dateNoteAdded : -1}).exec(function(err, notes){ //... });
- // Note.find().sort([['dateNoteAdded', 'descending']]).all(function (err, notes) {
-    // do something with the array of posts
-  // });
-  //   Note.find({},{
-  //     skip:0, // Starting Row
-  //     limit:10, // Ending Row
-  //     sort:{
-  //       dateNoteAdded: -1 //Sort by Date Added DESC
-  //     }
-  //   },function (err, notes) {
-        if (err) {
-            console.log('found accounts error')
-            return res.status(500).json({
-                message: 'Error when getting notes.',
-                error: err
-            });
-        }
-        console.log('listing found for notes')
-       // return res.json(notes);
-        res.render('index', { title: 'Notes for Brian', notes: notes });
-    });
+    console.log("sending vue-notes.html back............................")
+    console.log(" path = " + path.join(__dirname + '../public/vue-notes.html'))
+    res.sendFile(path.join(__dirname + '../public/vue-notes.html'));
+    
+//   Note.find({}).sort({ dateNoteAdded : -1}).exec(function(err, notes){ //... });
+//         if (err) {
+//             console.log('found accounts error')
+//             return res.status(500).json({
+//                 message: 'Error when getting notes.',
+//                 error: err
+//             });
+//         }
+//         res.render('index', { title: 'Notes for Brian', notes: notes });
+//     });
 });
 // router.post('/note', function(req, res, next) {
 //     console.log('notes.....create......... ')
