@@ -60,7 +60,7 @@
                 grid-template-columns: 20% auto;
                 grid-template-areas:
             "header   header"
-                "sidebar  content"
+                "content  content"
                 "sidebar2 sidebar2"
                 "footer   footer";
             }
@@ -72,7 +72,7 @@
                     grid-template-columns: 120px auto 120px;
                     grid-template-areas:
             "header  header  header"
-                    "sidebar content sidebar2"
+                    "content content sidebar2"
                     "footer  footer  footer";
                     /* max-width: 600px; */
                 }
@@ -106,7 +106,7 @@
                 <button @click="newNote = !newNote">Add a Note</button>
                 Search: <input v-model="filterkey">
     </div>
-    <div class="box sidebar">Sidebar</div>
+    <!-- <div class="box sidebar">Sidebar</div> -->
     <div class="box sidebar2">
             <div class="comment-tags" @click="filterTag($event)">
                     <button v-for="(value, key) in tagList"> {{key}}  </button>
