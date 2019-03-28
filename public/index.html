@@ -1,297 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vue-notes</title>
-     <link rel='stylesheet' href='/stylesheets/style.css' />
-     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.js"></script> -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js" integrity="sha256-TaLceMwjWRqe4yhbqPOJH6V7UGt5AvvdNfpaIXJWbFU=" crossorigin="anonymous"></script>
-    <!--<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/2.4.0/vue-router.js"></script>-->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.1/axios.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
-    <!--<script src="./js/vueloader.js"></script>-->
-    <style>
-            body {
-        margin: 40px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Notes</title>
+  <style>
+  *, *:before, *:after {
+  box-sizing: border-box;
+}
 
-        .sidebar {
-                grid-area: sidebar;
-            }
+body {
+  margin: 40px;
+  font-family: 'Open Sans', 'sans-serif';
+  background-color: #fff;
+  color: #444;
+}
 
-            .sidebar2 {
-                grid-area: sidebar2;
-            }
+h1, p {
+  margin: 0 0 1em 0;
+}
 
-            .content {
-                grid-area: content;
-            }
-
-            .header {
-                grid-area: header;
-            }
-
-            .footer {
-                grid-area: footer;
-            }
-
-            .wrapper {
-                background-color: #fff;
-                color: #444;
-            }
-
-        .wrapper {
-            display: grid;
-            grid-gap: 1em;
-            grid-template-areas:
-            "header"
-            "sidebar"
-            "content"
-            "sidebar2"
-            "footer"
-        }
-
-            @media only screen and (min-width: 500px)  {
-            .wrapper {
-
-                grid-template-columns: 20% auto;
-                grid-template-areas:
-                "header   header"
-                "content  content"
-                "sidebar2 sidebar2"
-                "footer   footer";
-            }
-            }
-
-            @media only screen and (min-width: 600px)   {
-                .wrapper {
-            grid-gap: 20px;
-                    grid-template-columns: 120px auto 120px;
-                    grid-template-areas:
-            "header  header  header"
-                    "content content sidebar2"
-                    "footer  footer  footer";
-
-                    /* max-width: 600px; */
-                }
-            }
-
-        .box {
-        background-color: rgb(191, 199, 199);
-        color: rgb(7, 7, 7);
-        border-radius: 5px;
-        padding: 10px;
-        font-size: 150%; 
-        }
-
-        .header,
-        .footer {
-        background-color: #999;
-        }
-
-        .sidebar2 {
-        background-color: #ccc;
-        color: #444;
-        }
-    </style>
-</head>
-<body>
-    
-    <div id="app">
-        
-        <div class="wrapper">
-            <div class="box header">
-                <button @click="newNote = !newNote">Add a Note</button>
-                Search: <input v-model="filterkey">
-    </div>
-    <!-- <div class="box sidebar">Sidebar</div> -->
-    <div class="box sidebar2">
-            <div class="comment-tags" @click="filterTag($event)">
-                    <button v-for="(value, key) in tagList"> {{key}}  </button>
-                </div>
-    </div>
-    <div class="box content">
-            <div class="comment-content" v-if="!newNote">
-                <div class="sample-comments" :data-id="note._id" v-for="note in filteredData">
-                    <h3 class="comment-title">{{note.title}}
-                        <span align='right' class="small-date">{{note.name}} ({{note.displayDate}})<span class="delete"> X </span></span>
-    
-                    </h3>
-                    <p class="comment"><xmp> {{note.comment}}</xmp></p>
-                </div>
-            </div>
-            <div class="enter-comment" v-if="newNote">
-                    <form name="notes" action="/note" method="post">
-                        <label for="name"> User: </label><br><input type="text" id="name" name="name" value="brian"><br>
-                        <label for="subject"> Subject: </label><br><input type="text" id="subject" name="title"><br>
-                        <label>Notes:</label>
-                        <textarea rows="20" cols="50" name="comment" placeholder="enter some comments..."></textarea><br>
-                        <label for="tags"> Tags: <input type="text" id="tags" name="tags"></label>
-                        <input type="hidden" name="time">
-                        <button>Submit</button>
-                        <button type="button"  @click="newNote = !newNote">Cancel</button>
-                    </form>
-                </div>
-    </div>
-    <div class="box footer">Footer</div>
-</div>
-
-
-    
-<div class="container">
-    
-    
-    <div class="latest-comments">
-
-        
-    </div>
-</div>
-</div>
-<!-- container -->
-
-     <script>
-
-     const app = new Vue({
-  data: {
-    newNote: false,
-    sortKey: '',
-    filterkey: '',
-    notes: [],
-    tagList: {},
-  },
-   methods: {
-    filterTag: function(e){
-        console.log("tag= " + e.target.innerHTML)
-        this.filterkey = e.target.innerHTML.trim()
-    },
-    ArrNoDupe: function(a) {
-        var temp = {};
-        for (var i = 0; i < a.length; i++)
-            temp[a[i]] = true;
-        return Object.keys(temp);
-    },
-    isdone: function(a){
-     // console.log("param a= " + a)
-    // console.log("idone=" + a + "  today= " + this.today.getDay())
-      if (a < this.today.getDate()) return true;
-      return false;
-    }, 
-    fetchNotes: function(){
-   //   debugger;
-      var self = this;
-    //  var tlist = {};
-     axios.get("/note")
-      .then(function(res) {   
-          self.notes = res.data; 
-          console.log("notes found len= " + res.data.length)
-          console.log("notes found: " + JSON.stringify(res.data[0]))
-          self.notes.forEach(x => console.log(x.tags))
-          var myTags = []; 
-          res.data.forEach(function(a){
-           console.log("tags= " + a.tags)
-           var tags = a.tags.split(",")
-           tags.forEach(function(t){
-               var trimmed = t.trim();
-               self.tagList[trimmed] = (self.tagList[trimmed]) ?  self.tagList[trimmed] + 1 : 1;              
-           })
-          // self.tagList = self.ArrNoDupe(myTags)
-       })
-   //    this.tagList = Object.create(tlist);
-    //    console.log(this.todos[0])
-     //   console.log("todos count= " + this.todos.length)
-      })
-      .catch(function (error) {
-            console.log(error);
-        });
-    }
-  },
-  computed: {
-    filteredTags: function(){
-        var tagsList = []
-        // this.notes.reduce(function(a,note){
-        //     if (a)
-        // },[])
-        return 
-    },
-  filteredData: function () {
-      var sortKey = this.sortKey
-      var filterKey = this.filterkey && this.filterkey.toLowerCase()
-   //   var order = this.sortOrders[sortKey] || 1
-      var data = this.notes
-      if (filterKey) {
-        data = data.filter(function (row) {
-          return Object.keys(row).some(function (key) {
-            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
-          })
-        })
-      }
-    //   if (sortKey) {
-    //     data = data.slice().sort(function (a, b) {
-    //       a = a[sortKey]
-    //       b = b[sortKey]
-    //       return (a === b ? 0 : a > b ? 1 : -1) * order
-    //     })
-    //   }
-      return data
-    }
- },
-  created: function() {
-  // debugger;
-    console.log("app created..............")
-   this.fetchNotes();
+.wrapper {
+  width: 100vw;
+  margin: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 5px;
+}
+.tags,
+.content{
+  height: 90vh;
+  overflow: scroll;
+}
+xmp {
+  max-width: 500px;
+}
+  .header, .footer {
+    grid-column: 1 / 3;
+    /* needed for the floated layout */
+    clear: both;
   }
-}).$mount('#app')
-     </script>
-     <style>
-    .container {
-        /* display: flex; */
-
-    }
-    .comment-tags {
-        /* width: 100%;
-        height: 100px;
-        border: 1px solid black; */
-    }
-    .comment-tags button {
-        margin: 5px;
-    }
-    .enter-comment {
-        /* flex-basis: 400px; */
-        padding: 0 20px;
-    }
-    .comment-list {
-        /* flex-basis: 400px; */
-        padding: 0 20px;
-    }
-   h1 {
-       text-align: center;
-   }
-
-    .latest-comments {
-       display: grid;
-       grid-template-columns: 3fr 1fr;
-        grid-gap: 10px;
-    }
-    .list {
-        font-size: 1.2em;
-        border-bottom: 1px solid red;
-        padding: 5px 10px;
-        background-color: #f0f4f5;
-        border-radius: 15px;
-        margin: 10px 0;
-        -webkit-box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
-        -moz-box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
-        box-shadow: 7px 7px 38px 0px rgba(0,0,0,0.75);
+ .sidebar {
+   display: none;
+}
+.small-date {
+        font-size: .8em;
+        font-style:  italic;
+        float: right;
     }
     .sample-comments {
         border: 1px solid deepskyblue;
         padding: 10px 20px;
         border-radius: 5px;
         margin-bottom: 10px;
-        max-width: 900px;
+        /* max-width: 900px; */
         background: white;
         -webkit-box-shadow: 6px 6px 5px 0px rgba(163,163,163,1);
         -moz-box-shadow: 6px 6px 5px 0px rgba(163,163,163,1);
@@ -314,28 +77,286 @@
     .comment {
         font-size: 1.2em;
     }
-    .comment-content {
-        height: 800px;
+    .delete{
+      font-size: 2em;
+      color: red;
+      cursor: pointer;
+    }
+    .tags{
+      display: flex;
+      flex-direction: column;
+      border: 1px solid black;
+      background: #efcfcf;
+      padding: 2px;
+      /* margin: 2px 5px; */
+      font-size: 0.6em;
+      border-radius: 5px;
+    }
+    .comment-tags{
+      display: inline-block;
+      border: 1px solid black;
+      background: #efcfcf;
+      padding: 2px;
+      margin: 2px 5px;
+      font-size: 0.6em;
+      border-radius: 5px;
+    }
+@media screen and (min-width: 500px) {
+  /* .content {
+    float: left;
+    width: 79.7872%;
+    grid-column: 1 / 2;
+    width: 80vw;
+  } */
 
+  .wrapper {
+    margin: 0 auto;
+    grid-template-columns: 3fr 1fr;
+  }
+  .sidebar {
+   display: block;
+   width: 100%;
+}
+    .tags{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      border: 1px solid black;
+      background: #efcfcf;
+      padding: 2px;
+      /* margin: 2px 5px; */
+      font-size: 1.6em;
+      border-radius: 5px;
     }
-    .small-date {
-        font-size: .8em;
-        font-style:  italic;
-        float: right;
+  
+
+}
+
+.wrapper > * {
+  background-color: #ddd;
+  color: #333;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
+  /* needed for the floated layout*/
+  margin-bottom: 10px;
+}
+textarea{
+        width: 100%;
+        height: 250px;
+        border:1px solid #000000;
+        background-color:#CCCCCC;
     }
-    .delete {
-        color: #ff3c00;
-        font-size: 1.4em;
-        clear: right;
-        padding: 5px;
-    }
-    .delete:hover {
-        font-size: 1.2em;
-    }
-    .hide {
-        display: none;
-    }
-    xmp{ white-space:pre-wrap; word-wrap:break-word; }
-</style>
+/* .comment-tags{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      border: 1px solid black;
+      background: #efcfcf;
+      padding: 5px;
+      margin: 2px 5px;
+      font-size: 0.6em;
+      border-radius: 5px;
+    } */
+/* We need to set the widths used on floated items back to auto, and remove the bottom margin as when we have grid we have gaps. */
+@supports (display: grid) {
+  .wrapper > * {
+    /* max-width: 960px; */
+    /* width: auto; */
+    margin: 0;
+  }
+}
+  </style>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js" integrity="sha256-TaLceMwjWRqe4yhbqPOJH6V7UGt5AvvdNfpaIXJWbFU=" crossorigin="anonymous"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <div class="wrapper">
+    <header class="header">
+      <div class="box header">
+          <button @click="addNote">Add a Note</button>
+          Search: <input v-model="filterkey">
+      </div>  
+    </header>
+    
+    <article class="content">
+      <div class="comment-content" v-if="!newNote">
+          <div class="sample-comments" :data-id="note._id" v-for="note in filteredData">
+              <h3 class="comment-title">{{note.title}}
+                  <span align='right' class="small-date">{{note.name}} ({{note.displayDate}}) <button class='edit-button' @click="editNote(note)">Edit</button> <span class="delete" @click="deleteNote(note)"> X </span></span>
+              </h3>
+              <p class="comment" ><xmp > {{note.comment}}</xmp></p>
+              <div class="comment-tags" v-for="tag in note.tags.split(',')"> {{tag}}</div>
+
+          </div>
+      </div>
+      <div class="enter-comment" v-if="newNote">
+          <form name="notes" action="/note" method="post">
+              <label for="name"> User: </label><br><input type="text" id="name" name="name" value="brian"><br>
+              <label for="subject"> Subject: </label><br><input type="text" id="subject" name="title" v-model='freshNote.title'><br>
+              <label>Notes:</label>
+              <textarea name="comment" placeholder="enter some comments..." v-model='freshNote.comment'></textarea><br>
+              <!-- <textarea rows="20" cols="50" name="comment" placeholder="enter some comments..." v-model='freshNote.comment'></textarea><br> -->
+              <label for="tags"> Tags: <input type="text" id="tags" name="tags" v-model='freshNote.tags'></label>
+              <input type="hidden" name="time">
+              <button>Submit</button>
+              <button type="button"  @click="newNote = !newNote">Cancel</button>
+          </form>
+      </div>
+
+    </article>
+    <aside class="sidebar">
+       <div class="tags" @click="filterTag($event)">
+         Tags: {{tagLength}}
+        <button v-for="(value, key) in tagList"> {{key}} : {{value}}  </button>
+       </div>
+    </aside>
+    <footer class="footer">My footer</footer>
+  </div>
+  
+  <!-- end app -->
+</div>
+  <script>
+ const app = new Vue({
+ data: {
+   newNote: false,
+   sortKey: '',
+   filterkey: '',
+   notes: [],
+   freshNote: {
+     title: 'newtitle',
+     comment: 'new comment',
+     tags: []
+   },
+   tagList: {"test tag":"1"},
+   editing: false
+ },
+  methods: {
+    addNote: function(){
+      this.editing = false
+      this.freshNote.title = ''
+      this.freshNote.comment = ''
+      this.freshNote.tags = ''
+      this.newNote = true;
+    },
+    deleteNote: function(note){
+      console.log(`delete note: ${JSON.stringify(note, null, 3)}`)
+
+    },
+    editNote: function(note){
+      console.log(`Edit note: ${JSON.stringify(note, null, 3)}`)
+      this.editing = true
+      this.freshNote.title = note.title
+      this.freshNote.comment = note.comment
+      this.freshNote.tags = note.tags
+      this.newNote = true;
+
+    },
+   filterTag: function(e){
+     //  console.log("tag= " + e.target.innerHTML)
+       this.filterkey = e.target.innerHTML.split(':')[0].trim()
+      //  this.filterkey = e.target.innerHTML.trim()
+   },
+   ArrNoDupe: function(a) {
+       var temp = {};
+       for (var i = 0; i < a.length; i++)
+           temp[a[i]] = true;
+       return Object.keys(temp);
+   },
+   isdone: function(a){
+    // console.log("param a= " + a)
+   // console.log("idone=" + a + "  today= " + this.today.getDay())
+     if (a < this.today.getDate()) return true;
+     return false;
+   }, 
+   fetchNotes: function(){
+  //   debugger;
+     var self = this;
+    axios.get("/note")
+     .then(function(res) {   
+         self.notes = res.data; 
+         console.log("notes found len= " + res.data.length)
+         console.log("notes found: " + JSON.stringify(res.data[0]))
+    //     self.notes.forEach(x => console.log(x.tags))
+         var myTags = {}; 
+         res.data.forEach(function(a){
+         // console.log("tags= " + a.tags)
+          var tags = a.tags.split(",")
+          tags.forEach(function(t){
+              var trimmed = t.trim().toLowerCase();
+             
+              myTags[trimmed] = (myTags[trimmed]) ?  myTags[trimmed] + 1 : 1;              
+              // self.tagList[trimmed] = (self.tagList[trimmed]) ?  self.tagList[trimmed] + 1 : 1;              
+          })
+          //self.tagList = self.ArrNoDupe()
+      })
+      const ordered = {};
+      Object.keys(myTags).sort().forEach(function(key) {
+        ordered[key] = myTags[key];
+      });
+     self.tagList = ordered
+    //  self.tagList = myTags
+   //    console.log(this.todos[0])
+    //   console.log("todos count= " + this.todos.length)
+     })
+     .catch(function (error) {
+           console.log(error);
+       });
+   },
+   deleteNote: function(note){
+    debugger;
+     var self = this;
+    axios.post(`/note/delete/${note._id}`)
+     .then(function(res) {   
+         self.notes = res.data; 
+         console.log("notes found len= " + res.data.length)
+         console.log("notes found: " + JSON.stringify(res.data[0]))
+     })
+     .catch(function (error) {
+           console.log(error);
+       });
+   }
+ },
+ computed: {
+   tagLength: function(){
+     return Object.keys(this.tagList).length
+   },
+   filteredTags: function(){
+       var tagsList = []
+       // this.notes.reduce(function(a,note){
+       //     if (a)
+       // },[])
+       return 
+   },
+ filteredData: function () {
+     var sortKey = this.sortKey
+     var filterKey = this.filterkey && this.filterkey.toLowerCase()
+  //   var order = this.sortOrders[sortKey] || 1
+     var data = this.notes
+     if (filterKey) {
+       data = data.filter(function (row) {
+         return Object.keys(row).some(function (key) {
+           return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+         })
+       })
+     }
+   //   if (sortKey) {
+   //     data = data.slice().sort(function (a, b) {
+   //       a = a[sortKey]
+   //       b = b[sortKey]
+   //       return (a === b ? 0 : a > b ? 1 : -1) * order
+   //     })
+   //   }
+     return data
+   }
+},
+ created: function() {
+ // debugger;
+   console.log("app created..............")
+  this.fetchNotes();
+ }
+}).$mount('#app')
+    </script>
 </body>
 </html>

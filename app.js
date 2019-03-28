@@ -28,8 +28,31 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //mongoose.connect('mongodb://localhost:27017/testapp');
-mongoose.connect('mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks');
+//mongoose.connect('mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks');
 //mongoose.connect('mongodb://username:password@host:port/database')
+const mongooseUrl = 'mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks'
+mongoose.Promise = global.Promise;
+
+// Connecting to the database
+// module.exports.connect = function() {
+// 	mongoose.connect('mongodb://localhost:27017/'+database);
+// 	var db = mongoose.connection;
+// 	db.on("error", console.error.bind(console, "connection error"));
+// 	db.once("open", function(callback){
+// 	  console.log(`Connection to ${database} Succeeded`);
+// 	});
+// 	return db;
+// }
+
+mongoose.connect(mongooseUrl,{ useMongoClient: true })
+//mongoose.openUri(mongooseUrl)
+.then(() => {
+    console.log("Successfully connected to the database: " + mongooseUrl);    
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...');
+    process.exit();
+});
+
 
 
 app.use('/note', note);

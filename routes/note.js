@@ -31,7 +31,8 @@ router.get('/', function(req, res, next) {
    // console.log('coment: ' + JSON.stringify(notes,null,4))//nodes)
        // return res.json(notes);
        // res.render('index', { title: 'Notes for Brian', notes: notes });
-        res.json(200, notes);
+       // res.json(200, notes);  //  express deprecated res.json(status, obj): Use res.status(status).json(obj) instead routes\note.js:34:13
+        res.status(200).json(notes)
     });
 });
 
