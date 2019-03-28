@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="origin">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Notes</title>
   <style>
@@ -187,7 +188,8 @@ textarea{
                   <span align='right' class="small-date">{{note.name}} ({{note.displayDate}}) <button class='edit-button' @click="editNote(note)">Edit</button> <span class="delete" @click="deleteNote(note)"> X </span></span>
               </h3>
               <p class="comment" ><xmp > {{note.comment}}</xmp></p>
-              <div class="comment-tags" v-for="tag in note.tags.split(',')"> {{tag}}</div>
+              <div class="comment-tags"v-if="note.tags" v-for="tag in note.tags.split(',')"> {{tag}}</div>
+              <!-- <div class="comment-tags" v-for="tag in splitTags(note.tags)"> {{tag}}</div> -->
 
           </div>
       </div>
@@ -200,6 +202,7 @@ textarea{
               <!-- <textarea rows="20" cols="50" name="comment" placeholder="enter some comments..." v-model='freshNote.comment'></textarea><br> -->
               <label for="tags"> Tags: <input type="text" id="tags" name="tags" v-model='freshNote.tags'></label>
               <input type="hidden" name="time">
+              <input type="hidden" name="id" v-model='freshNote.id'>
               <button>Submit</button>
               <button type="button"  @click="newNote = !newNote">Cancel</button>
           </form>
@@ -241,12 +244,14 @@ textarea{
       this.newNote = true;
     },
     deleteNote: function(note){
-      console.log(`delete note: ${JSON.stringify(note, null, 3)}`)
+      // console.log(`delete note: ${JSON.stringify(note, null, 3)}`)
 
     },
     editNote: function(note){
-      console.log(`Edit note: ${JSON.stringify(note, null, 3)}`)
+      // console.log(`Edit note: ${JSON.stringify(note, null, 3)}`)
+    //  debugger
       this.editing = true
+      this.freshNote.id = note._id
       this.freshNote.title = note.title
       this.freshNote.comment = note.comment
       this.freshNote.tags = note.tags
@@ -276,8 +281,8 @@ textarea{
     axios.get("/note")
      .then(function(res) {   
          self.notes = res.data; 
-         console.log("notes found len= " + res.data.length)
-         console.log("notes found: " + JSON.stringify(res.data[0]))
+        //  console.log("notes found len= " + res.data.length)
+        //  console.log("notes found: " + JSON.stringify(res.data[0]))
     //     self.notes.forEach(x => console.log(x.tags))
          var myTags = {}; 
          res.data.forEach(function(a){
@@ -305,13 +310,15 @@ textarea{
        });
    },
    deleteNote: function(note){
-    debugger;
+ //   debugger;
      var self = this;
     axios.post(`/note/delete/${note._id}`)
      .then(function(res) {   
-         self.notes = res.data; 
-         console.log("notes found len= " + res.data.length)
-         console.log("notes found: " + JSON.stringify(res.data[0]))
+         //self.notes = res.data; 
+      //   console.log(`success deleting: ${JSON.stringify(res.data, null, 3)}`)
+         self.fetchNotes()
+        //  console.log("notes found len= " + res.data.length)
+        //  console.log("notes found: " + JSON.stringify(res.data[0]))
      })
      .catch(function (error) {
            console.log(error);
@@ -322,17 +329,11 @@ textarea{
    tagLength: function(){
      return Object.keys(this.tagList).length
    },
-   filteredTags: function(){
-       var tagsList = []
-       // this.notes.reduce(function(a,note){
-       //     if (a)
-       // },[])
-       return 
-   },
  filteredData: function () {
      var sortKey = this.sortKey
      var filterKey = this.filterkey && this.filterkey.toLowerCase()
   //   var order = this.sortOrders[sortKey] || 1
+  //debugger
      var data = this.notes
      if (filterKey) {
        data = data.filter(function (row) {
@@ -348,12 +349,13 @@ textarea{
    //       return (a === b ? 0 : a > b ? 1 : -1) * order
    //     })
    //   }
+  // console.log(`filteredData: ${JSON.stringify(data, null, 3)}`)
      return data
    }
 },
  created: function() {
  // debugger;
-   console.log("app created..............")
+  // console.log("app created..............")
   this.fetchNotes();
  }
 }).$mount('#app')
