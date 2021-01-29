@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -27,27 +28,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//mongoose.connect('mongodb://localhost:27017/testapp');
-//mongoose.connect('mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks');
-//mongoose.connect('mongodb://username:password@host:port/database')
-// const mongooseUrl = 'mongodb://iambrian:bkcbkc07@ds031108.mlab.com:31108/aalinks'
-const mongooseUrl = 'mongodb+srv://bkc:bkcbkc07@aalinks.ksits.mongodb.net/aalinks?retryWrites=true&w=majority';
+const mongooseUrl = process.env.ATLAS;
 mongoose.Promise = global.Promise;
-
-// Connecting to the database
-// module.exports.connect = function() {
-// 	mongoose.connect('mongodb://localhost:27017/'+database);
-// 	var db = mongoose.connection;
-// 	db.on("error", console.error.bind(console, "connection error"));
-// 	db.once("open", function(callback){
-// 	  console.log(`Connection to ${database} Succeeded`);
-// 	});
-// 	return db;
-// }
-
-// mongoose.connect(mongooseUrl,{ useMongoClient: true })
 mongoose.connect(mongooseUrl)
-//mongoose.openUri(mongooseUrl)
 .then(() => {
     console.log("Successfully connected to the database: " + mongooseUrl);    
 }).catch(err => {
