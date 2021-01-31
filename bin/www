@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+require('dotenv').config();
 /**
  * Module dependencies.
  */
@@ -14,7 +14,8 @@ var http = require('http');
  */
 //var port = 80;
 
-var port = normalizePort(process.env.PORT || '7010');
+// var port = normalizePort(process.env.PORT || '7010');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
